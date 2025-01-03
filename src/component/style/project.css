@@ -289,13 +289,6 @@
     flex-wrap: wrap;
 }
 
-/* .empty-project{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 65%;
-} */
-
 .project-boxes.jsGridView .project-box-wrapper {
     width: 33.3%;
 }
