@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import useAuth from './hooks/useAuth';
-import axios from '../api/axios';
 import { useNavigate } from 'react-router-dom';
-
-const FORGET_PASSWORD = "/forget-password"
+import { forgetPasswordAPi } from '../api/user';
 
 const ForgetPassword = () => {
     const emailRef = useRef();
@@ -26,7 +24,11 @@ const ForgetPassword = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(FORGET_PASSWORD, { "email": email });
+            const response = await forgetPasswordAPi( 
+                {
+                    payload: { "email": email }
+                }   
+            );
             alert(response.data?.message);
             setErrMsg(response.data);
         } catch (err) {

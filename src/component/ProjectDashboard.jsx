@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
 import AuthContext from "../context/AuthProvider";
-import axios from "../api/axios";
 import { useLocation } from "react-router-dom";
 import "./style/projectDashboard.css";
 import ShowModal from "./ShowModal";
@@ -8,6 +7,7 @@ import ShowAddUserModel from "./ShowAddUserModel";
 import { Dropdown, Collapse, initMDB } from "mdb-ui-kit";
 import useLoading from "./hooks/useLoading";
 import ReactLoading from "react-loading";
+import { projectWithIdApi } from "../api/project";
 
 const ProjectDashboard = () => {
   const { auth } = useContext(AuthContext);
@@ -36,10 +36,10 @@ const ProjectDashboard = () => {
     async function getProjectWithId() {
       try {
         startLoading();
-        const PROJECT_WITH_ID = `/project/${projectId}`;
 
-        const response = await axios.get(PROJECT_WITH_ID, {
-          headers: { Authorization: auth.accessToken },
+        const response = await projectWithIdApi({
+          projectId,
+          auth
         });
 
         setProject(response?.data?.project);

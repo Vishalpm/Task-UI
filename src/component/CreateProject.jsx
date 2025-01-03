@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState, useContext } from 'react'
 import { Dropdown, Collapse, initMDB } from "mdb-ui-kit";
-import axios from '../api/axios';
 import AuthContext from '../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import AllProjects from "./AllProjects";
-
-const CREATE_PROJECT = "/project/create-project"
+import { createProjectApi } from '../api/project';
 
 const CreateProject = () => {
     const errRef = useRef();
@@ -35,10 +33,14 @@ const CreateProject = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post(CREATE_PROJECT, { "projectDescription": description, projectName: projectName },
+            const response = await createProjectApi(
                 {
-                    headers: { Authorization: auth.accessToken }
-                }
+                    payload: {
+                        projectName: projectName,
+                        projectDescription: description,
+                    },
+                    auth
+                },
             );
 
             alert(response.data.message);

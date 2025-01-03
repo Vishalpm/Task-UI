@@ -4,6 +4,7 @@ import axios from "../api/axios"
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import { jwtDecode } from "jwt-decode";
+import { loginUrlApi } from '../api/user';
 
 const LOGIN_URL = "/login"
 
@@ -52,7 +53,9 @@ function Login() {
 
         // Make a POST request to the SignUp API with formData
         try {
-            const response = await axios.post(LOGIN_URL, formData);
+            const response = await loginUrlApi({
+                payload: formData
+            });
             // Set the response data in state
 
             const accessToken = response.data?.data?.accessToken;

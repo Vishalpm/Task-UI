@@ -1,8 +1,8 @@
 import AuthContext from '../context/AuthProvider';
 import { Dropdown, Collapse, initMDB } from "mdb-ui-kit";
-import axios from '../api/axios';
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { updateTaskApi, taskWithIdApi} from '../api/task';
 
 
 
@@ -33,12 +33,10 @@ const UpdateTask = () => {
         async function getTaskWithId() {
             try {
 
-                const TASK_WITH_ID = `/task/${taskId}`;
-
-                const response = await axios.get(TASK_WITH_ID,
-                    {
-                        headers: { Authorization: auth.accessToken }
-                    }
+                const response = await taskWithIdApi({
+                    taskId,
+                    auth
+                }
                 );
                 
                 setTask(response?.data?.Task[0]?.description);
@@ -73,14 +71,14 @@ const UpdateTask = () => {
     const handleSubmit = async (e) => {
         try {
             e.preventDefault();
-            const UPDATE_TASK = `/task/${taskId}`;
 
-            await axios.put(UPDATE_TASK, {
-                "description": task,
-                "completed": completed
-            },
-                {
-                    headers: { Authorization: auth.accessToken }
+            await updateTaskApi(
+                {   taskId,
+                    payload:{
+                        description: task,
+                        completed: completed
+                    },
+                    auth
                 }
             );
 

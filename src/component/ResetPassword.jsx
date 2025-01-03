@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
+import { resetPasswordApi } from '../api/user';
 import { Dropdown, Collapse, initMDB } from "mdb-ui-kit";
 
 
@@ -23,11 +24,12 @@ const ResetPassword = () => {
             initMDB({ Dropdown, Collapse });
             const path = location?.pathname;
             const token = path.split("/")[2];
-            const RESET_PASSWORD = `/reset-password/${token}`;
 
-            const response = await axios.post(RESET_PASSWORD, { "password": password });
+            const response = await resetPasswordApi({ 
+                token,
+                payload: { "password": password }
+            });
 
-            console.log(response.data?.message);
             alert(response.data?.message);
             navigate("/login");
         } catch (err) {

@@ -1,101 +1,107 @@
-import React, { useState, useContext, useEffect } from 'react';
-import axios from "../api/axios"
-import AuthContext from '../context/AuthProvider';
-import AllTask from './AllTask';
+import React, { useState, useContext, useEffect } from "react";
+import AuthContext from "../context/AuthProvider";
+import AllTask from "./AllTask";
 import { Dropdown, Collapse, initMDB } from "mdb-ui-kit";
-
-
-const SHOWALL_TASK = "/task/showall"
+import { showAllTaskpi } from "../api/task";
 
 const Task = () => {
     const { auth } = useContext(AuthContext);
-
     const [allTaskData, setAllTaskData] = useState([]);
     const [isDeletedData, setIsDeletedData] = useState(false);
-    const [errMsg, setErrMsg] = useState('');
+    const [errMsg, setErrMsg] = useState("");
     const [dataFetched, setDataFetched] = useState(false);
 
     useEffect(() => {
-        async function getAllData() {
+        const getAllData = async () => {
             try {
-                initMDB({ Dropdown, Collapse });
-                if(!dataFetched || isDeletedData) {
-                    const response = await axios.get(SHOWALL_TASK, {
-                        headers: { Authorization: auth.accessToken }
-                    });
+                // Initialize MDB only if not already initialized
+                if (!Dropdown || !Collapse) {
+                    initMDB({ Dropdown, Collapse });
+                }
 
-                    // Set the response data in state
+                if (!dataFetched || isDeletedData) {
+                    const response = await showAllTaskpi({ auth });
+
                     if (response?.data?.Task) {
-                        setAllTaskData(response?.data?.Task);
-                    }
-                    else {
+                        setAllTaskData(response.data.Task);
+                        setErrMsg(""); // Clear any previous error messages
+                    } else {
                         setAllTaskData([]);
-                        setErrMsg('You have not any current task yet...');
+                        setErrMsg("You have not any current task yet...");
                     }
 
                     setDataFetched(true);
+                    setIsDeletedData(false); // Reset deletion state
                 }
-
             } catch (err) {
                 if (!err?.response) {
-                    setErrMsg('No server response');
-                }
-                else if (err.response?.status === 400) {
-                    setErrMsg('You have not any current task yet...');
+                    setErrMsg("No server response");
+                } else if (err.response?.status === 400) {
+                    setErrMsg("You have not any current task yet...");
                 } else if (err.response?.status === 401) {
-                    setErrMsg('Unautherized');
+                    setErrMsg("Unauthorized");
+                } else if (err.response?.status === 403) {
+                    setErrMsg("User is not logged In");
+                } else {
+                    setErrMsg("Fetching tasks failed");
                 }
-                else if (err.response?.status === 403) {
-                    setErrMsg('User is not logged In');
-                }
-                else {
-                    setErrMsg('Login failed');
-                }
-
-                // errRef.current.focus();
             }
-        }
+        };
 
         getAllData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isDeletedData])
+    }, [auth, dataFetched, isDeletedData]);
 
     return (
         <>
-
             <div className="page-content">
                 <div className="header">My Tasks</div>
 
                 <div className="content-categories">
                     <div className="label-wrapper">
-                        <input className="nav-item" name="nav" type="radio" id="opt-1" checked />
-                        <label className="category" htmlFor="opt-1">All</label>
+                        <input
+                            className="nav-item"
+                            name="nav"
+                            type="radio"
+                            id="opt-1"
+                            defaultChecked // Use defaultChecked for initial value
+                        />
+                        <label className="category" htmlFor="opt-1">
+                            All
+                        </label>
                     </div>
                     <div className="label-wrapper">
-                        <input className="nav-item" name="nav" type="radio" id="opt-2" />
-                        <label className="category" htmlFor="opt-2">Completed</label>
+                        <input
+                            className="nav-item"
+                            name="nav"
+                            type="radio"
+                            id="opt-2"
+                            onChange={() => console.log("Filter: Completed tasks")} // Add handler
+                        />
+                        <label className="category" htmlFor="opt-2">
+                            Completed
+                        </label>
                     </div>
                 </div>
 
                 <div className="tasks-wrapper">
-                    {
-                        allTaskData.length > 0 ?
-                            allTaskData?.map((item) => (
-                                <AllTask
-                                    taskId={item?._id}
-                                    description={item.description}
-                                    status={item.completed}
-                                    isDeletedData={isDeletedData}
-                                    setIsDeletedData={setIsDeletedData}
-                                />
-                            ))
-                            :
-                            <div>{errMsg}</div>
-                    }
+                    {allTaskData.length > 0 ? (
+                        allTaskData.map((item, index) => (
+                            <AllTask
+                                key={index}
+                                taskId={item?._id}
+                                description={item.description}
+                                status={item.completed}
+                                isDeletedData={isDeletedData}
+                                setIsDeletedData={setIsDeletedData}
+                            />
+                        ))
+                    ) : (
+                        <div>{errMsg || "Loading tasks..."}</div>
+                    )}
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default Task
+export default Task;

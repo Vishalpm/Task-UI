@@ -4,6 +4,7 @@ import axios from '../api/axios';
 import AuthContext from '../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import Task from './Task';
+import { createTaskApi } from '../api/task';
 
 const CREATE_TASK = "/task/createnew"
 
@@ -33,10 +34,13 @@ const CreateTask = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post(CREATE_TASK, { "description": description },
-                {
-                    headers: { Authorization: auth.accessToken }
-                }
+            const response = await createTaskApi(
+               {
+                payload: {
+                    description 
+                   },
+                auth
+               }
             );
 
             alert(response.data.message);
@@ -62,17 +66,17 @@ const CreateTask = () => {
 
     return (
         <>
-            <div class="page-content row  d-flex  align-items-center h-100">
+            <div className="page-content row  d-flex  align-items-center h-100">
                 <section className='col-4 d-flex justify-content-center align-items-center'>
                     <p ref={errRef} className={errMsg ? "errMsg" : "offscreen"} aria-live='assertive' >
                         {errMsg}
                     </p>
                 </section>
 
-                <div class="header col-4 d-flex justify-content-center align-items-center" >Create New Task </div>
+                <div className="header col-4 d-flex justify-content-center align-items-center" >Create New Task </div>
                 <div className='col-4'>
 
-                    <form onSubmit={handleSubmit} class="row d-flex justify-content-center align-items-center">
+                    <form onSubmit={handleSubmit} className="row d-flex justify-content-center align-items-center">
                         <div className="mb-3">
                             <label
                                 className="form-label">

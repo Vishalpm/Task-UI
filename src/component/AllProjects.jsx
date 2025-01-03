@@ -1,12 +1,11 @@
 import React, { useState, useContext, useEffect } from "react";
-import axios from "../api/axios";
 import AuthContext from "../context/AuthProvider";
 import Project from "./Project";
 import "./style/project.css";
 import useLoading from "./hooks/useLoading";
 import ReactLoading from "react-loading";
+import { showAssignedProjectApi } from "../api/project";
 
-const SHOE_ASSIGNED_PROJECT = "/project/show-assigned-project";
 
 const Meeting = () => {
   const { auth } = useContext(AuthContext);
@@ -35,14 +34,9 @@ const Meeting = () => {
     async function getAllProject() {
       try {
         startLoading();
-        // initMDB({ Dropdown, Collapse });
-        // if(!dataFetched || isDeletedData) {
-        const response = await axios.get(SHOE_ASSIGNED_PROJECT, {
-          headers: { Authorization: auth.accessToken },
-        });
+        const response = await showAssignedProjectApi({auth});
 
-        // Set the response data in state
-        // console.log(response.data.Projects);
+        
         if (response?.data?.Projects) {
           setProjects(response.data.Projects);
         } else {
@@ -81,13 +75,13 @@ const Meeting = () => {
         />
       )}
       {!loading && (
-        <div class="projects-section">
-          <div class="projects-section-header">
+        <div className="projects-section">
+          <div className="projects-section-header">
             <p>Projects</p>
-            <p class="time">
+            <p className="time">
               {auth?.role === "admin" ? (
-                <a href="/projects/create" class="item item-p">
-                  {/* <img className="feather feather-star" src="svg/star.svg" alt="" /> */}
+                <a href="/projects/create" className="item item-p">
+                  {/* <img classNameName="feather feather-star" src="svg/star.svg" alt="" /> */}
                   <span>Create New </span>
                 </a>
               ) : (
@@ -95,23 +89,23 @@ const Meeting = () => {
               )}
             </p>
           </div>
-          <div class="projects-section-line">
-            <div class="projects-status">
-              <div class="item-status">
-                <span class="status-number">{projects.length}</span>
-                <span class="status-type">In Progress</span>
+          <div className="projects-section-line">
+            <div className="projects-status">
+              <div className="item-status">
+                <span className="status-number">{projects.length}</span>
+                <span className="status-type">In Progress</span>
               </div>
-              <div class="item-status">
-                <span class="status-number">{projects.length}</span>
-                <span class="status-type">Upcoming</span>
+              <div className="item-status">
+                <span className="status-number">{projects.length}</span>
+                <span className="status-type">Upcoming</span>
               </div>
-              <div class="item-status">
-                <span class="status-number">{projects.length}</span>
-                <span class="status-type">Total Projects</span>
+              <div className="item-status">
+                <span className="status-number">{projects.length}</span>
+                <span className="status-type">Total Projects</span>
               </div>
             </div>
-            <div class="view-actions">
-              <button class="view-btn list-view" title="List View">
+            <div className="view-actions">
+              <button className="view-btn list-view" title="List View">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -122,7 +116,7 @@ const Meeting = () => {
                   stroke-width="2"
                   strokeLinecap="round"
                   stroke-linejoin="round"
-                  class="feather feather-list"
+                  className="feather feather-list"
                 >
                   <line x1="8" y1="6" x2="21" y2="6" />
                   <line x1="8" y1="12" x2="21" y2="12" />
@@ -132,7 +126,7 @@ const Meeting = () => {
                   <line x1="3" y1="18" x2="3.01" y2="18" />
                 </svg>
               </button>
-              <button class="view-btn grid-view active" title="Grid View">
+              <button className="view-btn grid-view active" title="Grid View">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -143,7 +137,7 @@ const Meeting = () => {
                   stroke-width="2"
                   strokeLinecap="round"
                   stroke-linejoin="round"
-                  class="feather feather-grid"
+                  className="feather feather-grid"
                 >
                   <rect x="3" y="3" width="7" height="7" />
                   <rect x="14" y="3" width="7" height="7" />
@@ -153,11 +147,11 @@ const Meeting = () => {
               </button>
             </div>
           </div>
-          <div class="project-boxes jsGridView">
+          <div className="project-boxes jsGridView">
             {projects.length > 0 ? (
               projects?.map((item) => <Project item={item} />)
             ) : (
-              <div>{errMsg}</div>
+              <div className="empty-project">{errMsg}</div>
             )}
           </div>
         </div>

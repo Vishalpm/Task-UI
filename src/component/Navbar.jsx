@@ -2,9 +2,8 @@ import React, { useContext, useEffect, useState, useRef } from "react";
 import { Dropdown, Collapse, initMDB } from "mdb-ui-kit";
 import AuthContext from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import axios from "../api/axios";
+import { searchUserApi } from "../api/user";
 
-const SEARCH_USER = "/searchUsers";
 
 const Navbar = () => {
   const { isLogin, setIsLogin, auth } = useContext(AuthContext);
@@ -37,11 +36,9 @@ const Navbar = () => {
 
   const handleUserSearch = async () => {
     try {
-      const response = await axios.post(
-        SEARCH_USER,
-        { name: searchRef.current.value },
-        {
-          headers: { Authorization: auth.accessToken },
+      const response = await searchUserApi({
+          payload: { name: searchRef.current.value },
+          auth
         }
       );
 
@@ -92,10 +89,10 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="d-flex align-items-center space">
-              <form class=" form-inline my-2 my-lg-0 ">
+              <form className=" form-inline my-2 my-lg-0 ">
                 <input
                   data-mdb-dropdown-init
-                  class="form-control"
+                  className="form-control"
                   type="search"
                   placeholder="Search"
                   aria-label="Search"

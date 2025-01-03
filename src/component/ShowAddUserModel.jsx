@@ -1,13 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { Dropdown, Collapse, initMDB } from "mdb-ui-kit";
-import axios from '../api/axios';
 import AuthContext from '../context/AuthProvider';
 import { useLocation } from 'react-router-dom';
 import useLoading from "./hooks/useLoading";
 import ReactLoading from "react-loading";
+import { addProjectToUserApi, showAllUserApi} from '../api/project';
 
-const SHOW_ALL_USER = "/project/show-users";
-const ADD_PROJECT_TO_USER = "/project/add-user-to-project";
 
 
 const ShowAddUserModel = ({ closeUserModel }) => {
@@ -34,13 +32,11 @@ const ShowAddUserModel = ({ closeUserModel }) => {
         async function showAllUser() {
             try {
                 startLoading();
-                const response = await axios.post(SHOW_ALL_USER,
+                const response = await showAllUserApi(
                     {
-                        projectId
+                        projectId,
+                        auth
                     },
-                    {
-                        headers: { Authorization: auth.accessToken }
-                    }
                 );
 
                 // console.log(response.data.Users);
@@ -95,14 +91,12 @@ const ShowAddUserModel = ({ closeUserModel }) => {
 
             console.log(addUsers);
 
-            const response = await axios.post(ADD_PROJECT_TO_USER,
+            const response = await addProjectToUserApi(
                 {
                     projectId,
-                    addUsers
+                    pauload: {addUsers},
+                    auth
                 },
-                {
-                    headers: { Authorization: auth.accessToken }
-                }
             );
 
             console.log(response.data?.message);

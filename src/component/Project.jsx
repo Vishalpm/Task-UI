@@ -24,8 +24,8 @@ const Project = (props) => {
                     <div class="more-wrapper">
                         <button class="project-btn-more">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                strokeLinecap="round" stroke-linejoin="round"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                                strokeLinecap="round" strokeLinejoin="round"
                                 class="feather feather-more-vertical">
                                 <circle cx="12" cy="12" r="1" />
                                 <circle cx="12" cy="5" r="1" />
@@ -53,8 +53,8 @@ const Project = (props) => {
                             alt="participant" />
                         <button class="add-participant c1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-                                strokeLinecap="round" stroke-linejoin="round" class="feather feather-plus">
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"
+                                strokeLinecap="round" strokeLinejoin="round" class="feather feather-plus">
                                 <path d="M12 5v14M5 12h14" />
                             </svg>
                         </button>

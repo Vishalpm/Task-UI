@@ -2,8 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import axios from '../api/axios';
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-
-const REGISTER_URL = "/register"
+import { registerUrlApi } from '../api/user';
 
 const Registration = () => {
     const nameRef = useRef();
@@ -57,7 +56,9 @@ const Registration = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(REGISTER_URL, { ...formData, role: role });
+            const response = await registerUrlApi({ 
+                payload: { ...formData, role: role }
+            });
             // Set the response data in state
             if (response.status === 201) {
                 alert("You are registerd successfully!!")

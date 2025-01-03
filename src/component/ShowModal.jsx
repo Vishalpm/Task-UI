@@ -1,10 +1,8 @@
 import React, { useRef, useState, useContext } from 'react'
 import { Dropdown, Collapse, initMDB } from "mdb-ui-kit";
-import axios from '../api/axios';
 import AuthContext from '../context/AuthProvider';
 import { useLocation } from 'react-router-dom';
-
-const CREATE_PROJETC_TASK = "/project/create-project-task"
+import { createProjectTaskApi } from '../api/project';
 
 const ShowModal = ({ closeModal }) => {
     const { auth } = useContext(AuthContext);
@@ -34,14 +32,14 @@ const ShowModal = ({ closeModal }) => {
         initMDB({ Dropdown, Collapse });
 
         try {
-            const response = await axios.post(CREATE_PROJETC_TASK, {
+            const response = await createProjectTaskApi({
+               payload: {
                 projectId: projectId,
                 taskName: taskName,
                 taskDescription: taskDescription
+               },
+               auth
             },
-                {
-                    headers: { Authorization: auth.accessToken }
-                }
             );
 
             alert(response.data.message);

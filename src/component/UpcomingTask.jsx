@@ -3,9 +3,8 @@ import { Dropdown, Collapse, initMDB } from "mdb-ui-kit";
 import UpcomingTaskData from './UpcomingTaskData';
 import AuthContext from '../context/AuthProvider';
 import axios from '../api/axios';
+import { pendingTasksApi } from '../api/task';
 
-
-const PENDING_TASK = "/task/pending"
 
 const UpcomingTask = () => {
     const { auth } = useContext(AuthContext);
@@ -17,9 +16,7 @@ const UpcomingTask = () => {
             try {
                 initMDB({ Dropdown, Collapse });
 
-                const response = await axios.get(PENDING_TASK, {
-                    headers: { Authorization: auth.accessToken }
-                });
+                const response = await pendingTasksApi({auth});
 
                 // Set the response data in state
                 if (response.data?.pendingTask.length) {
@@ -60,6 +57,7 @@ const UpcomingTask = () => {
                     {allPendingTaskData.length > 0 ?
                         allPendingTaskData.map((item) => (
                             <UpcomingTaskData
+                                key={item._id}
                                 taskId={item._id}
                                 description={item.description}
                                 status={item.completed}

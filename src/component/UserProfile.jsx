@@ -3,10 +3,7 @@ import "./style/general.css"
 import AuthContext from '../context/AuthProvider';
 import {useNavigate} from 'react-router-dom';
 import axios from '../api/axios';
-
-
-
-const SHOW_PROFILE = "/profile";
+import { showProfileApi } from '../api/user';
 
 const UserProfile = () => {
     const { auth} = useContext(AuthContext);
@@ -22,9 +19,7 @@ const UserProfile = () => {
             try {
 
                 // console.log(auth.accessToken);
-                const response = await axios.get(SHOW_PROFILE, {
-                    headers: { Authorization: auth.accessToken }
-                });
+                const response = await showProfileApi({auth});
 
                 setShowProfileData(response.data?.profile);
             } catch (err) {
